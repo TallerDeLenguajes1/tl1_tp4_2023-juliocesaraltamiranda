@@ -54,7 +54,7 @@ int main(){
         if (opc == 1)
         {
             i_realizado++;
-            tarea2[i_realizado] = (Tarea *)malloc(sizeof(Tarea));
+            //tarea2[i_realizado] = (Tarea *)malloc(sizeof(Tarea));
             tarea2[i_realizado] = tarea[i];
             tarea[i] = NULL;
         }
