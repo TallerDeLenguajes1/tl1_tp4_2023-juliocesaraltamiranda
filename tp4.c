@@ -42,9 +42,9 @@ int main() {
     cargarTareasRealizadas(tareasPendientes, tareasRealizadas, cantTareas);
 
     //mostrar tareas
-    printf("Taras pendientes: \n");
+    printf("Tareas pendientes:");
     mostrarTareas(tareasPendientes, cantTareas);
-    printf("Taras realizadas: \n");
+    printf("\n\nTareas realizadas:");
     mostrarTareas(tareasRealizadas, cantTareas);
 
     //liberacion de memoria para tareas
@@ -88,8 +88,6 @@ void cargarTareasPendientes(Tarea **tareas, int cantTareas) {
 
         Tarea *tarea = cargarTarea(i, buff);
         tareas[i] = tarea;
-
-        free(tarea);   
     }
 
     free(buff);
@@ -123,7 +121,7 @@ void mostrarTareas(Tarea **tareas, int cantTareas) {
     for(int i = 0; i < cantTareas; i++) {
         
         if(tareas[i] != NULL) {
-            printf("\n\nTareaID: %d\n\n", tareas[i]->TareaID);        
+            printf("\n\nTareaID: %d\n", tareas[i]->TareaID);        
             printf("Descripcion: %s \n", tareas[i]->Descripcion);
             printf("Duracion: %d", tareas[i]->Duracion);
         }
