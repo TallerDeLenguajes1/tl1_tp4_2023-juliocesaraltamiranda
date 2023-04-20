@@ -18,6 +18,7 @@ Tarea *cargarTarea(int itera, char *buff);
 void cargarTareasPendientes(Tarea **tareas, int cantTareas);
 void cargarTareasRealizadas(Tarea **tareasPendientes, Tarea **tareasRealizadas, int cantTareas);
 void mostrarTareas(Tarea **tareas, int cantTareas);
+Tarea *BuscarTarea(Tarea **tareasPendientes, Tarea **tareasRealizadas, int cantTareas, char descripcion[]);
 void liberarMemoriaTareas(Tarea **tareas, int cantTareas);
 
 int main() {
@@ -127,6 +128,36 @@ void mostrarTareas(Tarea **tareas, int cantTareas) {
         }
        
     }
+}
+
+Tarea *BuscarTarea(Tarea **tareasPendientes, Tarea **tareasRealizadas, int cantTareas, char descripcion[]) {
+
+    int posPen = 0;
+    int encontradoPen = 0;
+    int posRe = 0;
+    int encontradoRe = 0;
+
+    
+
+    for(int i = 0; i < cantTareas; i++) {
+       
+        if(tareasPendientes[i]!=NULL && strstr(tareasPendientes[i]->Descripcion, descripcion)!=NULL) {
+            encontradoPen = 1;
+            posPen = i;
+        }
+    }
+
+    for(int i = 0; i < cantTareas; i++) {
+        if(tareasRealizadas[i]!=NULL &&  strstr(tareasRealizadas[i]->Descripcion, descripcion)!=NULL) {
+            encontradoRe = 1;
+            posRe = i;
+        }
+    }
+
+    if(!encontradoPen && !encontradoRe) { return NULL; }
+    if(encontradoPen) { return tareasPendientes[posPen]; }
+    if(encontradoRe) { return tareasRealizadas[posRe]; }
+
 }
 
 void liberarMemoriaTareas(Tarea **tareas, int cantTareas) {
