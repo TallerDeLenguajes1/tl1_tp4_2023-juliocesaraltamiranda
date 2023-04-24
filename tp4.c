@@ -45,11 +45,53 @@ int main() {
     cargarTareasRealizadas(tareasPendientes, tareasRealizadas, cantTareas);
 
     //mostrar tareas
-    printf("Tareas pendientes:");
-    mostrarTareas(tareasPendientes, cantTareas);
     printf("\n\nTareas realizadas:");
     mostrarTareas(tareasRealizadas, cantTareas);
-   
+    printf("\n\nTareas pendientes:");
+    mostrarTareas(tareasPendientes, cantTareas);
+    printf("\n\n");
+
+    int opt;
+    int TareaID;
+    char descripcion[40];
+
+    printf("1-Buscar tareas por id\n");
+    printf("2-Buscar tareas por palabra\n");
+    scanf("%d", &opt);
+    if(opt == 1) {
+
+        printf("\ningrese TareaID: ");
+        scanf("%d", &TareaID);
+        Tarea *encontrada = BuscaTareaPorId(tareasPendientes, tareasRealizadas, cantTareas, TareaID);
+
+        if(encontrada) {
+            printf("\nTarea encontrada: \n");
+            printf("\n\nTareaID: %d\n", encontrada->TareaID);        
+            printf("Descripcion: %s \n", encontrada->Descripcion);
+            printf("Duracion: %d", encontrada->Duracion);
+        } else {
+            printf("\nTarea no encontrada\n");
+        }
+
+    } else {
+
+        printf("\ningrese palabra clave: ");
+        scanf("%s", descripcion);
+        Tarea *encontrada = BuscaTareaPorPalabra(tareasPendientes, tareasRealizadas, cantTareas, descripcion);
+
+        if(encontrada) {
+            printf("\nTarea encontrada: \n");
+            printf("\n\nTareaID: %d\n", encontrada->TareaID);        
+            printf("Descripcion: %s \n", encontrada->Descripcion);
+            printf("Duracion: %d", encontrada->Duracion);
+        } else {
+            printf("\nTarea no encontrada\n");
+        }
+
+    }
+
+    
+
     //liberacion de memoria para tareas
     liberarMemoriaTareas(tareasPendientes, cantTareas);
     liberarMemoriaTareas(tareasRealizadas, cantTareas);
@@ -72,11 +114,12 @@ Tarea *cargarTarea(int itera, char *buff) {
 
     tarea->TareaID = itera;
     tarea->Duracion = rand() % 90 + 11;
-    getchar();
+    //getchar();
 
     printf("Ingrese descripcion para TareaID %d: ",  tarea->TareaID);
 
-    gets(buff);
+    //gets(buff);
+    scanf("%s", buff);
     strcpy(tarea->Descripcion, buff);
 
     
@@ -112,9 +155,7 @@ void cargarTareasRealizadas(Tarea **tareasPendientes, Tarea **tareasRealizadas, 
         if(opt == 1) {
             tareasRealizadas[i] = tareasPendientes[i];
             tareasPendientes[i] = NULL;
-        } else {
-            tareasRealizadas[i] = NULL;
-        }
+        } 
         
     }
 }
