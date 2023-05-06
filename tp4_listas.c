@@ -21,13 +21,13 @@ typedef struct Nodo{
 Nodo *inicializarTareas();
 Tarea cargarTarea(int TareaID, char *buff);
 Nodo *crearNodo(Tarea tarea);
-void insertarNodo(Nodo **tareas, Tarea tarea);
+void insertarNodo(Nodo **tareas, Tarea tarea, char descripcion[]);
 void buscarTareas(Nodo *tareas, Nodo *tareasRealizadas, char opt[]);
 Nodo *BuscaTareaPorId(Nodo *tareas, int TareaID);
 Nodo *BuscaTareaPorPalabra(Nodo *tareas, char descripcion[]);
 void moverNodo(Nodo **tareas, int TareaID);
 int ultimoID(Nodo *tareas);
-void mostrarTarea(Tarea tarea);
+void mostrarTarea(Tarea tarea, char descripcion[]);
 void mostrarTareas(Nodo *tareas, char descripcion[]);
 void menuTarea(int TareaID);
 void menuPrincipal();
@@ -50,7 +50,7 @@ int main() {
     Nodo *siguiente;
 
     while(tareasPendientes) {
-        siguiente =  tareasPendientes->Siguiente;
+        siguiente = tareasPendientes->Siguiente;
         free(tareasPendientes->T.Descripcion);
         free(tareasPendientes);
         tareasPendientes = siguiente;                                          
@@ -66,7 +66,8 @@ int main() {
         tareasRealizada = siguiente;                                          
     }
 
-    free(tareasRealizada); 
+    free(tareasRealizada);
+
     
   
     
@@ -101,7 +102,7 @@ Nodo *crearNodo(Tarea tarea) {
     return nuevoNodo;
 }
 
-void insertarNodo(Nodo **tareas, Tarea tarea) {
+void insertarNodo(Nodo **tareas, Tarea tarea, char descripcion[]) {
 
     Nodo *ultimoNodo = *tareas;
     Nodo *nuevoNodo = crearNodo(tarea);
@@ -109,12 +110,14 @@ void insertarNodo(Nodo **tareas, Tarea tarea) {
 
     if(ultimoNodo == NULL) {
         *tareas = nuevoNodo;
+        printf("\nTarea %d agregada en tareas %s\n", tarea.TareaID, descripcion);
     } else {
 
         while(ultimoNodo->Siguiente) {
             ultimoNodo = ultimoNodo->Siguiente;
         }
         ultimoNodo->Siguiente = nuevoNodo;
+        printf("\nTarea %d agregada en tareas %s\n", tarea.TareaID, descripcion);
     }
 
 }
@@ -192,7 +195,7 @@ void procesarTareas(Nodo **tareas, Nodo **tareasRealizadas) {
 void menuPrincipal() {
     printf("\n");
     printf("\n");
-    printf("1- Cargar tareas\n");
+    printf("1- Cargar tareas\n");//submenu
     printf("2- Buscar tareas por id\n");
     printf("3- Buscar tareas por palabra\n");
     printf("4- Mostrar tareas pendientes\n");
@@ -213,13 +216,17 @@ void cargarTareasRealizada(Nodo **tareasPendientes, Nodo **tareasRealizadas, int
     Nodo *nodoEncontrado = BuscaTareaPorId(*tareasPendientes, TareaID);
 
     if(nodoEncontrado) {
-        insertarNodo(tareasRealizadas, nodoEncontrado->T);
+        insertarNodo(tareasRealizadas, nodoEncontrado->T, "realizadas");
         moverNodo(tareasPendientes, TareaID);
-        printf("\nTarea %d agregada en tareas realizadas\n", TareaID);
     }
 }
 
-void mostrarTarea(Tarea tarea) {
+void mostrarTarea(Tarea tarea, char descripcion[]) {
+
+    if(descripcion!="") {
+        printf("\nTarea %d encontrada en tareas %s", tarea.TareaID, descripcion);
+    }
+    
     printf("\n\nTareaID: %d\n", tarea.TareaID);        
     printf("Descripcion: %s \n", tarea.Descripcion);
     printf("Duracion: %d", tarea.Duracion);
@@ -235,7 +242,7 @@ void mostrarTareas(Nodo *tareas, char descripcion[]) {
     }
 
     while(tareas) {
-        mostrarTarea(tareas->T);
+        mostrarTarea(tareas->T, "");
         tareas = tareas->Siguiente;
     }
 }
@@ -285,8 +292,8 @@ void cargarTareas(Nodo **tareasPendientes, Nodo **tareasRealizadas, char *buff) 
     while(ingresar) {
 
         tarea = cargarTarea(TareaID, buff);
-        insertarNodo(tareasPendientes, tarea);
-        printf("\nTarea %d agregada en tareas pendientes\n", TareaID);
+        insertarNodo(tareasPendientes, tarea, "pendientes");
+        
 
         menuTarea(tarea.TareaID);
         scanf("%d", &optMenuTareas);
@@ -328,8 +335,7 @@ void buscarTareas(Nodo *tareas, Nodo *tareasRealizadas, char opt[]) {
 
         if(encontrado) {
 
-            printf("\nTarea %d encontrada en tareas pendientes", idABuscar);
-            mostrarTarea(encontrado->T);       
+            mostrarTarea(encontrado->T, "pendientes");       
 
         } else {
 
@@ -338,8 +344,7 @@ void buscarTareas(Nodo *tareas, Nodo *tareasRealizadas, char opt[]) {
 
             if(encontrado) {
 
-                printf("\nTarea %d encontrada en tareas realizadas", idABuscar);
-                mostrarTarea(encontrado->T);       
+                mostrarTarea(encontrado->T, "realizadas");       
 
             } else {
 
@@ -358,8 +363,7 @@ void buscarTareas(Nodo *tareas, Nodo *tareasRealizadas, char opt[]) {
 
         if(encontrado) {
 
-            printf("\nTarea %d encontrada en tareas pendientes", encontrado->T.TareaID);
-            mostrarTarea(encontrado->T);       
+            mostrarTarea(encontrado->T, "pendientes");       
 
         } else {
 
@@ -368,8 +372,7 @@ void buscarTareas(Nodo *tareas, Nodo *tareasRealizadas, char opt[]) {
 
             if(encontrado) {
 
-                printf("\nTarea %d encontrada en tareas realizadas", encontrado->T.TareaID);
-                mostrarTarea(encontrado->T);       
+                mostrarTarea(encontrado->T, "realizadas");       
 
             } else {
 
